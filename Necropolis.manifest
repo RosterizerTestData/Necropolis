@@ -1,6 +1,6 @@
 {
   "name": "Necropolis",
-  "revision": "0.0.1",
+  "revision": "0.0.2",
   "game": "Necropolis",
   "genre": "fantasy",
   "publisher": "Peter Vigors",
@@ -730,6 +730,9 @@
         },
         "disallowed": {
           "items": []
+        },
+        "aspects": {
+          "Rename": true
         }
       },
       "Ranged Weapon": {
@@ -759,7 +762,10 @@
           }
         },
         "keywords": {
-          "Lore": []
+          "Lore": [],
+          "Tags": [
+            "-"
+          ]
         }
       },
       "Thrown Weapons": {
@@ -793,13 +799,6 @@
             "value": 0,
             "statType": "numeric"
           },
-          "obols": {
-            "statType": "numeric",
-            "value": 0,
-            "group": "Cost",
-            "groupOrder": -1,
-            "visibility": "normal"
-          },
           "Damage": {
             "statType": "term",
             "value": null,
@@ -809,6 +808,14 @@
             "statType": "numeric",
             "value": null,
             "visibility": "normal"
+          },
+          "obols": {
+            "statType": "numeric",
+            "value": 0,
+            "group": "Cost",
+            "groupOrder": -1,
+            "visibility": "always",
+            "tracked": true
           }
         },
         "keywords": {
@@ -1200,9 +1207,7 @@
       },
       "Leader§Lich": {
         "stats": {
-          "obols": {
-            "value": null
-          },
+          "obols": {},
           "AP": {
             "value": 2
           },
@@ -1233,9 +1238,7 @@
       },
       "Leader§Revenant": {
         "stats": {
-          "obols": {
-            "value": null
-          },
+          "obols": {},
           "AP": {
             "value": 2
           },
@@ -3792,4 +3795,4 @@
     "gameModes": {},
     "theme": {}
   }
-}
+  }
