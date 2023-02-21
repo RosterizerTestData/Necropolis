@@ -1,0 +1,3795 @@
+{
+  "name": "Necropolis",
+  "revision": "0.0.1",
+  "game": "Necropolis",
+  "genre": "fantasy",
+  "publisher": "Peter Vigors",
+  "url": "https://discord.gg/Eedt8xTb6w",
+  "notes": "This manifest is provided for the purposes of testing *Rosterizer* and is not intended for distribution.",
+  "wip": false,
+  "manifest": {
+    "assetTaxonomy": {
+      "Armour": {
+        "stats": {
+          "Armour": {
+            "value": 0,
+            "statType": "numeric"
+          },
+          "obols": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "normal",
+            "tracked": true
+          }
+        },
+        "aspects": {
+          "Lock Qty": true,
+          "Unique": true
+        },
+        "keywords": {
+          "Tags": [
+            "-"
+          ]
+        }
+      },
+      "Basic Leader Trait": {
+        "templateClass": "Trait"
+      },
+      "Colossal Melee Weapon": {
+        "templateClass": "Weapon"
+      },
+      "Covenant Trait": {
+        "templateClass": "Trait",
+        "keywords": {
+          "Keywords": [],
+          "Tags": [
+            "-"
+          ]
+        }
+      },
+      "Equipment": {
+        "stats": {
+          "obols": {
+            "statType": "numeric",
+            "value": 0,
+            "statOrder": -1,
+            "group": "Cost",
+            "visibility": "normal",
+            "tracked": true
+          }
+        }
+      },
+      "Items": {
+        "templateClass": "Equipment"
+      },
+      "Leader": {
+        "templateClass": "Miniature",
+        "keywords": {
+          "Type": [
+            "Leader"
+          ]
+        },
+        "stats": {
+          "baseMana": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true
+          },
+          "Spell": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true
+          },
+          "Weapon": {
+            "max": 2
+          },
+          "Mana": {
+            "statType": "numeric",
+            "label": "Remaining",
+            "value": 0,
+            "statOrder": -1,
+            "group": "Mana",
+            "groupOrder": 3,
+            "visibility": "normal",
+            "tracked": true,
+            "min": 0,
+            "max": 0
+          },
+          "bloodMana": {
+            "statType": "numeric",
+            "label": "Blood",
+            "increment": {
+              "value": 1
+            },
+            "value": 0,
+            "group": "Mana",
+            "groupOrder": 3,
+            "visibility": "normal",
+            "tracked": true,
+            "min": 0
+          },
+          "boneMana": {
+            "statType": "numeric",
+            "label": "Bone",
+            "increment": {
+              "value": 1
+            },
+            "value": 0,
+            "group": "Mana",
+            "groupOrder": 3,
+            "visibility": "normal",
+            "tracked": true,
+            "min": 0
+          },
+          "plasmMana": {
+            "statType": "numeric",
+            "label": "Plasm",
+            "increment": {
+              "value": 1
+            },
+            "value": 0,
+            "group": "Mana",
+            "groupOrder": 3,
+            "visibility": "normal",
+            "tracked": true,
+            "min": 0
+          },
+          "Trait": {
+            "max": 3
+          }
+        },
+        "rules": {
+          "remainingMana": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "bloodMana",
+                      "boneMana",
+                      "plasmMana"
+                    ],
+                    "value"
+                  ]
+                ],
+                "operator": "SUM",
+                "not": false,
+                "actionable": true,
+                "note": "Add all mana points"
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "baseMana",
+                    "value"
+                  ]
+                ],
+                "operator": "AND",
+                "not": false,
+                "actionable": true,
+                "note": "establish remaining mana",
+                "equation": {
+                  "operator": "T-O",
+                  "value": [
+                    "{self}",
+                    "rules",
+                    "remainingMana",
+                    "evals",
+                    "0",
+                    "result",
+                    "integer"
+                  ]
+                }
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 10,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Mana",
+                    "value"
+                  ]
+                ],
+                "actionType": "set",
+                "value": [
+                  "{self}",
+                  "rules",
+                  "remainingMana",
+                  "evals",
+                  "1",
+                  "result",
+                  "integer"
+                ],
+                "iterations": 1
+              }
+            ]
+          },
+          "hideRemaining": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Mana",
+                    "value"
+                  ]
+                ],
+                "value": 0,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 11,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Mana",
+                    "visibility"
+                  ]
+                ],
+                "actionType": "set",
+                "value": "hidden",
+                "iterations": 1
+              }
+            ]
+          },
+          "boneBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Bone",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Violence",
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -1,
+                "iterations": 1
+              }
+            ]
+          },
+          "bloodBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Blood",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": 2,
+                "iterations": 1
+              }
+            ]
+          },
+          "plasmBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Plasm",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -2,
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Type"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Fly",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "disallowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Armour§Heavy Armour",
+                "iterations": 1
+              }
+            ]
+          }
+        },
+        "allowed": {
+          "classifications": [
+            "Basic Leader Trait",
+            "Spell",
+            "Malady"
+          ]
+        },
+        "assets": {
+          "traits": [
+            "Spell§Summon"
+          ]
+        },
+        "aspects": {
+          "Group Includes": true,
+          "Rename": true,
+          "Describe": true
+        }
+      },
+      "Malady": {},
+      "Melee Weapon": {
+        "templateClass": "Weapon"
+      },
+      "Miniature": {
+        "stats": {
+          "obols": {
+            "statType": "numeric",
+            "value": 0,
+            "icons": [
+              "two-coins"
+            ],
+            "group": "Cost",
+            "groupOrder": -1,
+            "visibility": "always",
+            "tracked": true
+          },
+          "HP": {
+            "statType": "numeric",
+            "value": 0,
+            "statOrder": 5,
+            "group": "Stats",
+            "visibility": "normal",
+            "tracked": true
+          },
+          "Violence": {
+            "statType": "numeric",
+            "format": "{v}+",
+            "value": 0,
+            "statOrder": 3,
+            "group": "Stats",
+            "visibility": "normal",
+            "tracked": true
+          },
+          "Ranged": {
+            "statType": "numeric",
+            "format": "{v}+",
+            "value": 0,
+            "statOrder": 4,
+            "group": "Stats",
+            "visibility": "normal",
+            "tracked": true
+          },
+          "Move": {
+            "statType": "numeric",
+            "format": "{v}″",
+            "value": 0,
+            "statOrder": 1,
+            "group": "Stats",
+            "visibility": "normal",
+            "tracked": true
+          },
+          "AP": {
+            "statType": "numeric",
+            "value": 0,
+            "statOrder": 1,
+            "group": "Stats",
+            "visibility": "normal",
+            "tracked": true
+          },
+          "Weapon": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true,
+            "max": 1
+          },
+          "Armour Count": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true,
+            "max": 1
+          },
+          "Shield Count": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true,
+            "max": 1
+          },
+          "Trait": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true,
+            "max": 1
+          },
+          "Wretched Undead": {
+            "statType": "numeric",
+            "value": 0,
+            "visibility": "hidden",
+            "tracked": true,
+            "max": 1
+          }
+        },
+        "aspects": {
+          "Lock Qty": true,
+          "Type": "game piece"
+        },
+        "keywords": {
+          "Type": [],
+          "Tags": [],
+          "Keywords": []
+        },
+        "assets": {
+          "traits": [
+            "Melee Weapon§Improvised 1h"
+          ]
+        },
+        "allowed": {
+          "classifications": [
+            "Melee Weapon",
+            "Ranged Weapon",
+            "Armour",
+            "Wretched Undead"
+          ]
+        },
+        "disallowed": {
+          "items": [
+            "Melee Weapon§Large Claws 2h"
+          ]
+        },
+        "rules": {
+          "removeImprovised": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "included",
+                    "templateClass",
+                    "Weapon",
+                    "quantity"
+                  ]
+                ],
+                "min": 1,
+                "operator": "SUM",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 12,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits"
+                  ]
+                ],
+                "actionType": "remove",
+                "value": "Melee Weapon§Improvised 1h",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits"
+                  ]
+                ],
+                "actionType": "remove",
+                "value": "Colossal Melee Weapon§Improvised 1h",
+                "iterations": 1
+              }
+            ]
+          },
+          "Too many minis have covenant traits.": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "tally",
+                    "Minion Trait"
+                  ]
+                ],
+                "min": 1,
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              },
+              {
+                "paths": [
+                  [
+                    "{roster}",
+                    "tally",
+                    "Minion Trait"
+                  ]
+                ],
+                "max": [
+                  "{roster}",
+                  "stats",
+                  "totalMinionTraits",
+                  "value"
+                ],
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "error",
+            "evaluate": "OR"
+          }
+        },
+        "constraints": {
+          "any": [
+            "-"
+          ]
+        }
+      },
+      "Minion": {
+        "templateClass": "Miniature",
+        "rules": {
+          "removeBlood": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{roster}",
+                    "stats",
+                    "Keyword",
+                    "value"
+                  ]
+                ],
+                "value": "Blood",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 4,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "actionType": "remove",
+                "value": "Blood",
+                "iterations": 1
+              }
+            ]
+          },
+          "removeBone": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{roster}",
+                    "stats",
+                    "Keyword",
+                    "value"
+                  ]
+                ],
+                "value": "Bone",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 4,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "actionType": "remove",
+                "value": "Bone",
+                "iterations": 1
+              }
+            ]
+          },
+          "removePlasm": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{roster}",
+                    "stats",
+                    "Keyword",
+                    "value"
+                  ]
+                ],
+                "value": "Plasm",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 4,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "actionType": "remove",
+                "value": "Plasm",
+                "iterations": 1
+              }
+            ]
+          }
+        },
+        "disallowed": {
+          "items": []
+        }
+      },
+      "Ranged Weapon": {
+        "templateClass": "Weapon",
+        "stats": {
+          "Range": {
+            "statType": "term"
+          }
+        }
+      },
+      "Special Rule": {},
+      "Spell": {
+        "aspects": {
+          "Unique": true,
+          "Lock Qty": true
+        },
+        "stats": {
+          "AP": {
+            "value": 0,
+            "statType": "numeric"
+          },
+          "Channel": {
+            "statType": "numeric",
+            "format": "{v}+",
+            "value": 0,
+            "visibility": "normal"
+          }
+        },
+        "keywords": {
+          "Lore": []
+        }
+      },
+      "Thrown Weapons": {
+        "templateClass": "Equipment",
+        "stats": {
+          "Attacks": {
+            "value": 0,
+            "statType": "numeric"
+          },
+          "Damage": {
+            "statType": "term",
+            "value": null,
+            "visibility": "normal"
+          },
+          "Range": {
+            "statType": "term",
+            "value": null,
+            "visibility": "normal"
+          }
+        }
+      },
+      "Trait": {
+        "aspects": {
+          "Lock Qty": true,
+          "Unique": true
+        }
+      },
+      "Weapon": {
+        "stats": {
+          "Attacks": {
+            "value": 0,
+            "statType": "numeric"
+          },
+          "obols": {
+            "statType": "numeric",
+            "value": 0,
+            "group": "Cost",
+            "groupOrder": -1,
+            "visibility": "normal"
+          },
+          "Damage": {
+            "statType": "term",
+            "value": null,
+            "visibility": "normal"
+          },
+          "Range": {
+            "statType": "numeric",
+            "value": null,
+            "visibility": "normal"
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "-"
+          ]
+        }
+      },
+      "Wretched Undead": {
+        "templateClass": "Trait",
+        "keywords": {
+          "Tags": [
+            "Minion Trait"
+          ]
+        }
+      }
+    },
+    "assetCatalog": {
+      "Armour§Great Shield": {
+        "stats": {
+          "Armour": {
+            "value": 1
+          },
+          "obols": {
+            "value": 20
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "Shield Count"
+          ]
+        }
+      },
+      "Armour§Heavy Armour": {
+        "stats": {
+          "Armour": {
+            "value": 2
+          },
+          "obols": {
+            "value": 50
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "Armour Count"
+          ]
+        }
+      },
+      "Armour§Light Armour": {
+        "stats": {
+          "Armour": {
+            "value": 1
+          },
+          "obols": {
+            "value": 20
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "Armour Count"
+          ]
+        }
+      },
+      "Armour§Shield": {
+        "stats": {
+          "Armour": {
+            "value": 1
+          },
+          "obols": {
+            "value": 10
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "Shield Count"
+          ]
+        }
+      },
+      "Basic Leader Trait§Celerity": {
+        "stats": {
+          "Move": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Basic Leader Trait§Combatant": {
+        "stats": {
+          "Violence": {
+            "statType": "numeric",
+            "value": -1,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Basic Leader Trait§Miserly": {},
+      "Basic Leader Trait§Perceptive": {
+        "stats": {
+          "Ranged": {
+            "statType": "numeric",
+            "value": -1,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Basic Leader Trait§Regenerating Soul": {},
+      "Basic Leader Trait§Sorcerous Talent": {
+        "stats": {
+          "baseMana": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Basic Leader Trait§Spirit Siphon": {},
+      "Basic Leader Trait§Stalwart": {},
+      "Basic Leader Trait§Studious": {
+        "rules": {
+          "addSpell": {
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "stats",
+                    "Spell",
+                    "max"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": 1,
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Basic Leader Trait§Unyielding Will": {
+        "stats": {
+          "HP": {
+            "statType": "numeric",
+            "value": 2,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Colossal Melee Weapon§Colossal Weapon 2h": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "3/7"
+          },
+          "Range": {
+            "value": 2
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Colossal Melee Weapon§Dual Massive Weapons 2h": {
+        "stats": {
+          "obols": {
+            "value": 30
+          },
+          "Attacks": {
+            "value": 4
+          },
+          "Damage": {
+            "value": "1/4"
+          },
+          "Range": {
+            "value": 2
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Colossal Melee Weapon§Improvised 1h": {
+        "stats": {
+          "obols": {
+            "value": null
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "2/4"
+          },
+          "Range": {
+            "value": 2
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Colossal Melee Weapon§Large Claws 2h": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "3/7"
+          },
+          "Range": {
+            "value": 2
+          }
+        }
+      },
+      "Colossal Melee Weapon§Massive Hand Weapon 1h": {
+        "stats": {
+          "obols": {
+            "value": 10
+          },
+          "Attacks": {
+            "value": 3
+          },
+          "Damage": {
+            "value": "2/4"
+          },
+          "Range": {
+            "value": 2
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Covenant Trait§Adamant Structure": {
+        "keywords": {
+          "Keywords": [
+            "Bone"
+          ],
+          "Tags": [
+            "Minion Trait"
+          ]
+        }
+      },
+      "Covenant Trait§Apprentice": {
+        "keywords": {
+          "Tags": [
+            "Minion Trait"
+          ]
+        }
+      },
+      "Covenant Trait§Channeler": {},
+      "Covenant Trait§Chosen of the Hands": {
+        "keywords": {
+          "Keywords": [
+            "Blood"
+          ]
+        }
+      },
+      "Covenant Trait§March of the Hands": {
+        "keywords": {
+          "Keywords": [
+            "Blood"
+          ],
+          "Tags": [
+            "Minion Trait"
+          ]
+        }
+      },
+      "Covenant Trait§Moonlight Flit": {
+        "keywords": {
+          "Keywords": [
+            "Plasm"
+          ]
+        }
+      },
+      "Covenant Trait§Mournful Curse": {
+        "keywords": {
+          "Keywords": [
+            "Plasm"
+          ],
+          "Tags": [
+            "Minion Trait"
+          ]
+        }
+      },
+      "Covenant Trait§Osseus Sacrifice": {
+        "keywords": {
+          "Keywords": [
+            "Bone"
+          ]
+        }
+      },
+      "Items§Banner": {
+        "stats": {
+          "obols": {
+            "value": 20
+          }
+        }
+      },
+      "Items§Musical Instrument": {
+        "stats": {
+          "obols": {
+            "value": 20
+          }
+        }
+      },
+      "Items§Rope and Hook": {
+        "stats": {
+          "obols": {
+            "value": 10
+          }
+        }
+      },
+      "Leader§Ascended": {
+        "stats": {
+          "obols": {
+            "value": 250
+          },
+          "AP": {
+            "value": 3
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 5
+          },
+          "Ranged": {
+            "value": 6
+          },
+          "HP": {
+            "value": 25
+          },
+          "baseMana": {
+            "value": 5
+          },
+          "Spell": {
+            "max": 4
+          }
+        },
+        "removed": {
+          "assets": {
+            "traits": [
+              "Melee Weapon§Improvised 1h"
+            ]
+          },
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon"
+            ]
+          }
+        },
+        "assets": {
+          "traits": [
+            "Colossal Melee Weapon§Improvised 1h"
+          ]
+        },
+        "allowed": {
+          "classifications": [
+            "Colossal Melee Weapon"
+          ]
+        },
+        "disallowed": {
+          "items": []
+        }
+      },
+      "Leader§Lich": {
+        "stats": {
+          "obols": {
+            "value": null
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 7
+          },
+          "Ranged": {
+            "value": 7
+          },
+          "HP": {
+            "value": 15
+          },
+          "baseMana": {
+            "value": 4
+          },
+          "Spell": {
+            "max": 4
+          }
+        },
+        "assets": {
+          "traits": [
+            "Special Rule§Caster"
+          ]
+        }
+      },
+      "Leader§Revenant": {
+        "stats": {
+          "obols": {
+            "value": null
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 6
+          },
+          "Ranged": {
+            "value": 7
+          },
+          "HP": {
+            "value": 17
+          },
+          "baseMana": {
+            "value": 3
+          },
+          "Spell": {
+            "max": 2
+          }
+        },
+        "assets": {
+          "traits": [
+            "Special Rule§Ancient Skill",
+            "Special Rule§Fighter"
+          ]
+        }
+      },
+      "Malady§Cursed Form": {
+        "stats": {
+          "Move": {
+            "statType": "numeric",
+            "value": -1,
+            "visibility": "hidden"
+          },
+          "Violence": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden"
+          },
+          "Ranged": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden"
+          },
+          "Reduce:": {
+            "statType": "rank",
+            "value": "-",
+            "ranks": {
+              "-": {
+                "order": 0
+              },
+              "Violence": {
+                "order": 1
+              },
+              "Ranged": {
+                "order": 2
+              },
+              "Move": {
+                "order": 3
+              }
+            },
+            "visibility": "active",
+            "dynamic": true
+          }
+        },
+        "rules": {
+          "Select a stat to reduce.": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Reduce:",
+                    "value"
+                  ]
+                ],
+                "value": "-",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "warning",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "{0string}",
+                    "tracked"
+                  ]
+                ],
+                "actionType": "set",
+                "value": true,
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Malady§Frail Reformation": {
+        "stats": {
+          "HP": {
+            "statType": "numeric",
+            "value": -1,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Malady§Incomplete Form": {
+        "stats": {
+          "Move": {
+            "statType": "numeric",
+            "value": -1,
+            "visibility": "hidden"
+          },
+          "Violence": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden"
+          },
+          "Ranged": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden"
+          },
+          "Reduce:": {
+            "statType": "rank",
+            "value": "-",
+            "ranks": {
+              "-": {
+                "order": 0
+              },
+              "Violence": {
+                "order": 1
+              },
+              "Ranged": {
+                "order": 2
+              },
+              "Move": {
+                "order": 3
+              }
+            },
+            "visibility": "active",
+            "dynamic": true
+          }
+        },
+        "rules": {
+          "Select a stat to reduce.": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Reduce:",
+                    "value"
+                  ]
+                ],
+                "value": "-",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "warning",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "{0string}",
+                    "tracked"
+                  ]
+                ],
+                "actionType": "set",
+                "value": true,
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Malady§Perfect Reconstitution": {
+        "stats": {
+          "HP": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden",
+            "tracked": true
+          }
+        }
+      },
+      "Malady§Pilfered": {},
+      "Melee Weapon§Axe 1h": {
+        "stats": {
+          "obols": {
+            "value": 10
+          },
+          "Attacks": {
+            "value": 3
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 1
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Melee Weapon§Blade 1h": {
+        "stats": {
+          "obols": {
+            "value": 10
+          },
+          "Attacks": {
+            "value": 3
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 1
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Melee Weapon§Bludgeon 1h": {
+        "stats": {
+          "obols": {
+            "value": 10
+          },
+          "Attacks": {
+            "value": 3
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 1
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Melee Weapon§Claws/Fangs 2h": {
+        "stats": {
+          "obols": {
+            "value": 5
+          },
+          "Attacks": {
+            "value": 3
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 1
+          }
+        }
+      },
+      "Melee Weapon§Dual Hand Weapons 2h": {
+        "stats": {
+          "obols": {
+            "value": 30
+          },
+          "Attacks": {
+            "value": 4
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 1
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Melee Weapon§Great Weapon 2h": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "2/5"
+          },
+          "Range": {
+            "value": 1
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Melee Weapon§Improvised 1h": {
+        "stats": {
+          "obols": {
+            "value": null
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 1
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Melee Weapon§Large Claws 2h": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "2/5"
+          },
+          "Range": {
+            "value": 1
+          }
+        }
+      },
+      "Melee Weapon§Polearm 1h": {
+        "stats": {
+          "obols": {
+            "value": 10
+          },
+          "Attacks": {
+            "value": 2
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 2
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Melee Weapon§Polearm 2h": {
+        "stats": {
+          "obols": {
+            "value": 15
+          },
+          "Attacks": {
+            "value": 3
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": 2
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Miniature§Phantasm": {
+        "stats": {
+          "obols": {
+            "value": null
+          },
+          "AP": {
+            "value": 1,
+            "tracked": false
+          },
+          "Move": {
+            "value": 5,
+            "tracked": false
+          },
+          "Violence": {
+            "value": null,
+            "tracked": false
+          },
+          "Ranged": {
+            "value": null,
+            "tracked": false
+          },
+          "HP": {
+            "value": 4,
+            "tracked": false
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Plasm"
+          ],
+          "Type": [
+            "Fly"
+          ]
+        },
+        "aspects": {
+          "Visibility": "active",
+          "Type": "conceptual"
+        },
+        "removed": {
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon",
+              "Armour",
+              "Wretched Undead"
+            ]
+          },
+          "assets": {
+            "traits": [
+              "Melee Weapon§Improvised 1h"
+            ]
+          }
+        }
+      },
+      "Minion§Aberrant Husk": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ],
+          "Type": [
+            "Husk"
+          ]
+        },
+        "stats": {
+          "obols": {
+            "value": 90
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 6
+          },
+          "Ranged": {
+            "value": 7
+          },
+          "HP": {
+            "value": 12
+          }
+        },
+        "assets": {
+          "traits": [
+            "Special Rule§Brutal"
+          ]
+        },
+        "rules": {
+          "bloodBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Blood",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": 2,
+                "iterations": 1
+              }
+            ]
+          },
+          "boneBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Bone",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Violence",
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -1,
+                "iterations": 1
+              }
+            ]
+          },
+          "plasmBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Plasm",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -2,
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Type"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Fly",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "disallowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Armour§Heavy Armour",
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Minion§Corpse Husk": {
+        "stats": {
+          "obols": {
+            "value": 50
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 7
+          },
+          "Ranged": {
+            "value": 7
+          },
+          "HP": {
+            "value": 12
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood"
+          ],
+          "Type": [
+            "Husk"
+          ]
+        }
+      },
+      "Minion§Familiar": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 5
+          },
+          "Violence": {
+            "value": 9
+          },
+          "Ranged": {
+            "value": null
+          },
+          "HP": {
+            "value": 6
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ],
+          "Type": [
+            "Beast",
+            "Fly"
+          ]
+        },
+        "aspects": {
+          "Unique": true
+        },
+        "removed": {
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon",
+              "Armour"
+            ]
+          }
+        },
+        "allowed": {
+          "items": [
+            "Melee Weapon§Claws/Fangs 2h"
+          ]
+        },
+        "assets": {
+          "traits": [
+            "Special Rule§Soul Link"
+          ]
+        }
+      },
+      "Minion§Flying Beast": {
+        "stats": {
+          "obols": {
+            "value": 70
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 4
+          },
+          "Violence": {
+            "value": 7
+          },
+          "Ranged": {
+            "value": null
+          },
+          "HP": {
+            "value": 10
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone"
+          ],
+          "Type": [
+            "Beast",
+            "Fly"
+          ]
+        },
+        "removed": {
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon",
+              "Armour"
+            ]
+          }
+        },
+        "allowed": {
+          "items": [
+            "Melee Weapon§Claws/Fangs 2h"
+          ]
+        }
+      },
+      "Minion§Ghast Husk": {
+        "stats": {
+          "obols": {
+            "value": 50
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 7
+          },
+          "Ranged": {
+            "value": 7
+          },
+          "HP": {
+            "value": 8
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Plasm"
+          ],
+          "Type": [
+            "Fly",
+            "Husk"
+          ]
+        },
+        "assets": {
+          "traits": [
+            "Special Rule§Insubstantial"
+          ]
+        }
+      },
+      "Minion§Gigantic Horror": {
+        "stats": {
+          "obols": {
+            "value": 225
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 7
+          },
+          "Ranged": {
+            "value": null
+          },
+          "HP": {
+            "value": 25
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ],
+          "Type": [
+            "Beast",
+            "Husk"
+          ]
+        },
+        "removed": {
+          "assets": {
+            "traits": [
+              "Melee Weapon§Improvised 1h"
+            ]
+          },
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon"
+            ]
+          }
+        },
+        "assets": {
+          "traits": [
+            "Colossal Melee Weapon§Improvised 1h"
+          ]
+        },
+        "aspects": {
+          "Unique": true
+        },
+        "allowed": {
+          "classifications": [
+            "Colossal Melee Weapon"
+          ]
+        },
+        "rules": {
+          "plasmBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Plasm",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -2,
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Type"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Fly",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "disallowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Armour§Heavy Armour",
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Minion§Large Beast": {
+        "stats": {
+          "obols": {
+            "value": 80
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 8
+          },
+          "Ranged": {
+            "value": null
+          },
+          "HP": {
+            "value": 15
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone"
+          ],
+          "Type": [
+            "Beast"
+          ]
+        },
+        "aspects": {
+          "Unique": true
+        },
+        "removed": {
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon"
+            ]
+          },
+          "disallowed": {
+            "items": [
+              "Melee Weapon§Large Claws 2h"
+            ]
+          }
+        },
+        "allowed": {
+          "items": [
+            "Melee Weapon§Claws/Fangs 2h",
+            "Melee Weapon§Large Claws 2h"
+          ]
+        },
+        "constraints": {
+          "none": [
+            "Shield Count"
+          ]
+        }
+      },
+      "Minion§Necromantic Remnant": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 9
+          },
+          "Ranged": {
+            "value": 9
+          },
+          "HP": {
+            "value": 6
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ],
+          "Type": [
+            "Beast",
+            "Husk"
+          ]
+        },
+        "disallowed": {
+          "items": []
+        },
+        "constraints": {
+          "none": [
+            "2h"
+          ]
+        },
+        "removed": {
+          "disallowed": {
+            "items": [
+              "Melee Weapon§Large Claws 2h"
+            ]
+          }
+        },
+        "rules": {
+          "plasmBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Plasm",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -1,
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Type"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Fly",
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Minion§Skeletal Husk": {
+        "stats": {
+          "obols": {
+            "value": 50
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 3
+          },
+          "Violence": {
+            "value": 6
+          },
+          "Ranged": {
+            "value": 7
+          },
+          "HP": {
+            "value": 10
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Bone"
+          ],
+          "Type": [
+            "Husk"
+          ]
+        }
+      },
+      "Minion§Small Beast": {
+        "stats": {
+          "obols": {
+            "value": 60
+          },
+          "AP": {
+            "value": 2
+          },
+          "Move": {
+            "value": 4
+          },
+          "Violence": {
+            "value": 7
+          },
+          "Ranged": {
+            "value": null
+          },
+          "HP": {
+            "value": 10
+          }
+        },
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ],
+          "Type": [
+            "Beast"
+          ]
+        },
+        "removed": {
+          "allowed": {
+            "classifications": [
+              "Melee Weapon",
+              "Ranged Weapon"
+            ]
+          },
+          "disallowed": {
+            "items": [
+              "Melee Weapon§Large Claws 2h"
+            ]
+          }
+        },
+        "allowed": {
+          "items": [
+            "Melee Weapon§Claws/Fangs 2h"
+          ]
+        },
+        "constraints": {
+          "none": [
+            "Shield Count"
+          ]
+        },
+        "disallowed": {
+          "items": [
+            "Armour§Heavy Armour"
+          ]
+        },
+        "rules": {
+          "plasmBuff": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "value": "Plasm",
+                "contains": true,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    [
+                      "Violence",
+                      "HP"
+                    ],
+                    "value"
+                  ]
+                ],
+                "actionType": "modify",
+                "value": -2,
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "keywords",
+                    "Type"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Fly",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "disallowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Armour§Heavy Armour",
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Ranged Weapon§Bow 2h": {
+        "stats": {
+          "obols": {
+            "value": 30
+          },
+          "Attacks": {
+            "value": 1
+          },
+          "Damage": {
+            "value": "1/4"
+          },
+          "Range": {
+            "value": "1–6"
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Ranged Weapon§Crossbow 2h": {
+        "stats": {
+          "obols": {
+            "value": 40
+          },
+          "Attacks": {
+            "value": 1
+          },
+          "Damage": {
+            "value": "1/5"
+          },
+          "Range": {
+            "value": "1–10"
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "2h"
+          ]
+        }
+      },
+      "Ranged Weapon§Sling 1h": {
+        "stats": {
+          "obols": {
+            "value": 10
+          },
+          "Attacks": {
+            "value": 1
+          },
+          "Damage": {
+            "value": "1/3"
+          },
+          "Range": {
+            "value": "1–10"
+          }
+        },
+        "keywords": {
+          "Tags": [
+            "1h"
+          ]
+        }
+      },
+      "Roster§Gathering": {
+        "stats": {
+          "Keyword": {
+            "statType": "rank",
+            "value": "-",
+            "ranks": {
+              "-": {
+                "order": 0
+              },
+              "Blood": {
+                "order": 1
+              },
+              "Bone": {
+                "order": 2
+              },
+              "Plasm": {
+                "order": 3
+              }
+            },
+            "group": "Gathering",
+            "visibility": "normal",
+            "dynamic": true
+          },
+          "Lair prefix": {
+            "statType": "rank",
+            "value": "-",
+            "ranks": {
+              "-": {
+                "order": 0
+              },
+              "The Undying": {
+                "order": 1
+              },
+              "The Tainted": {
+                "order": 2
+              },
+              "The Rotten": {
+                "order": 3
+              },
+              "The Charnel": {
+                "order": 4
+              },
+              "The Hungering": {
+                "order": 5
+              },
+              "The Gloaming": {
+                "order": 6
+              },
+              "The Dusk": {
+                "order": 7
+              },
+              "The Profane": {
+                "order": 8
+              },
+              "The Hallowed": {
+                "order": 9
+              },
+              "The Crumbling": {
+                "order": 10
+              },
+              "The Hovels": {
+                "order": 11
+              },
+              "The Labyrinth": {
+                "order": 12
+              },
+              "The Library": {
+                "order": 13
+              },
+              "The Lock": {
+                "order": 14
+              },
+              "The Rookery": {
+                "order": 15
+              },
+              "The Ruin": {
+                "order": 16
+              },
+              "The Folly": {
+                "order": 17
+              },
+              "The Cloister": {
+                "order": 18
+              },
+              "The Priory": {
+                "order": 19
+              },
+              "The Sanctum": {
+                "order": 20
+              }
+            },
+            "visibility": "normal",
+            "dynamic": true
+          },
+          "Lair suffix": {
+            "statType": "rank",
+            "value": "-",
+            "ranks": {
+              "-": {
+                "order": 0
+              },
+              "Keep": {
+                "order": 1
+              },
+              "Church": {
+                "order": 2
+              },
+              "Anchorhold": {
+                "order": 3
+              },
+              "Gatehouse": {
+                "order": 4
+              },
+              "Fort": {
+                "order": 5
+              },
+              "Tower": {
+                "order": 6
+              },
+              "Temple": {
+                "order": 7
+              },
+              "Chapel": {
+                "order": 8
+              },
+              "Maze": {
+                "order": 9
+              },
+              "Barbican": {
+                "order": 10
+              },
+              "of Ruin": {
+                "order": 11
+              },
+              "of the Void": {
+                "order": 12
+              },
+              "of the Gloam": {
+                "order": 13
+              },
+              "of the Forgotten": {
+                "order": 14
+              },
+              "of the Lost": {
+                "order": 15
+              },
+              "of the Doomed": {
+                "order": 16
+              },
+              "of Entropy": {
+                "order": 17
+              },
+              "of Compunction": {
+                "order": 18
+              },
+              "of Grief": {
+                "order": 19
+              },
+              "of Contrition": {
+                "order": 20
+              }
+            },
+            "visibility": "normal",
+            "dynamic": true
+          },
+          "Leader": {
+            "statType": "rank",
+            "value": "-",
+            "ranks": {
+              "-": {
+                "order": 0
+              },
+              "Lich": {
+                "order": 1,
+                "traits": [
+                  {
+                    "trait": "Leader§Lich"
+                  }
+                ]
+              },
+              "Revenant": {
+                "order": 2,
+                "traits": [
+                  {
+                    "trait": "Leader§Revenant"
+                  }
+                ]
+              },
+              "Ascended": {
+                "order": 3,
+                "traits": [
+                  {
+                    "trait": "Leader§Ascended"
+                  }
+                ]
+              }
+            },
+            "group": "Gathering",
+            "visibility": "normal",
+            "dynamic": true
+          },
+          "obols": {
+            "statType": "numeric",
+            "value": 0,
+            "icons": [
+              "coins"
+            ],
+            "statOrder": -1,
+            "group": "Gathering",
+            "visibility": "normal",
+            "tracked": true
+          },
+          "Covenant": {
+            "statType": "rank",
+            "value": "Wretched Undead",
+            "ranks": {
+              "Wretched Undead": {
+                "order": 0
+              },
+              "Embalmed Hands": {
+                "order": 1,
+                "term": "Blood"
+              },
+              "Cairn-born": {
+                "order": 2,
+                "term": "Bone"
+              },
+              "Crescent of Mourn": {
+                "order": 3,
+                "term": "Plasm"
+              },
+              "Recusant Maleficar": {
+                "order": 4
+              }
+            },
+            "group": "Gathering",
+            "visibility": "normal",
+            "dynamic": true
+          },
+          "totalMinionTraits": {
+            "statType": "numeric",
+            "value": 1,
+            "visibility": "hidden"
+          }
+        },
+        "rules": {
+          "covenantSelectionKeyword": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Wretched Undead",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Recusant Maleficar",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 1,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Keyword",
+                    "value"
+                  ]
+                ],
+                "actionType": "set",
+                "value": [
+                  "{self}",
+                  "stats",
+                  "Covenant",
+                  "processed",
+                  "term",
+                  "current"
+                ],
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Keyword",
+                    "dynamic"
+                  ]
+                ],
+                "actionType": "set",
+                "value": false,
+                "iterations": 1
+              }
+            ]
+          },
+          "covenantSelectionLeader": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Recusant Maleficar",
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 1,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Leader",
+                    "value"
+                  ]
+                ],
+                "actionType": "set",
+                "value": "Lich",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Leader",
+                    "dynamic"
+                  ]
+                ],
+                "actionType": "set",
+                "value": false,
+                "iterations": 1
+              }
+            ]
+          },
+          "covenantSelectionWretched": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Wretched Undead",
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 1,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "totalMinionTraits",
+                    "value"
+                  ]
+                ],
+                "actionType": "set",
+                "value": 2,
+                "iterations": 1
+              }
+            ]
+          },
+          "Select a keyword.": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Keyword",
+                    "value"
+                  ]
+                ],
+                "value": "-",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "warning",
+            "evaluate": "AND",
+            "order": 2
+          },
+          "Select a Leader.": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Leader",
+                    "value"
+                  ]
+                ],
+                "value": "-",
+                "operator": "AND",
+                "not": true,
+                "actionable": true
+              }
+            ],
+            "failState": "warning",
+            "evaluate": "AND",
+            "order": 2
+          },
+          "setKeyword": {
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 4,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits",
+                    "classification",
+                    "Leader",
+                    "keywords",
+                    "Keywords"
+                  ]
+                ],
+                "actionType": "add",
+                "value": [
+                  "{self}",
+                  "stats",
+                  "Keyword",
+                  "value"
+                ],
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "constraints",
+                    "any"
+                  ]
+                ],
+                "actionType": "add",
+                "value": [
+                  "{self}",
+                  "stats",
+                  "Keyword",
+                  "value"
+                ],
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "assets",
+                    "templateClass",
+                    "Miniature",
+                    "constraints",
+                    "any"
+                  ]
+                ],
+                "actionType": "add",
+                "value": [
+                  "{self}",
+                  "stats",
+                  "Keyword",
+                  "value"
+                ],
+                "iterations": 1
+              }
+            ]
+          },
+          "embalmedHandsTraits": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Embalmed Hands",
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits",
+                    "classification",
+                    "Leader",
+                    "traits"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Chosen of the Hands",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "assets",
+                    "templateClass",
+                    "Miniature",
+                    "allowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§March of the Hands",
+                "iterations": 1
+              }
+            ]
+          },
+          "cairnBornTraits": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Cairn-born",
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits",
+                    "classification",
+                    "Leader",
+                    "traits"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Osseus Sacrifice",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "assets",
+                    "templateClass",
+                    "Miniature",
+                    "allowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Adamant Structure",
+                "iterations": 1
+              }
+            ]
+          },
+          "crescentTraits": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Crescent of Mourn",
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits",
+                    "classification",
+                    "Leader",
+                    "traits"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Moonlight Flit",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "assets",
+                    "templateClass",
+                    "Miniature",
+                    "allowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Mournful Curse",
+                "iterations": 1
+              }
+            ]
+          },
+          "recusantTraits": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "stats",
+                    "Covenant",
+                    "value"
+                  ]
+                ],
+                "value": "Recusant Maleficar",
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "traits",
+                    "classification",
+                    "Leader",
+                    "traits"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Channeler",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{self}",
+                    "assets",
+                    "templateClass",
+                    "Miniature",
+                    "allowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Covenant Trait§Apprentice",
+                "iterations": 1
+              }
+            ]
+          }
+        },
+        "allowed": {
+          "classifications": [
+            "Minion"
+          ]
+        }
+      },
+      "Special Rule§Ancient Skill": {},
+      "Special Rule§Brutal": {},
+      "Special Rule§Caster": {
+        "rules": {
+          "noHeavyArmour": {
+            "failState": "pass",
+            "evaluate": "AND",
+            "order": 25,
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "disallowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Armour§Heavy Armour",
+                "iterations": 1
+              },
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "constraints",
+                    "not"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Shield Count",
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Special Rule§Fighter": {
+        "rules": {
+          "resetSpells": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "stats",
+                    "Spell",
+                    "max"
+                  ]
+                ],
+                "min": 5,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "stats",
+                    "Spell",
+                    "max"
+                  ]
+                ],
+                "actionType": "set",
+                "value": 4,
+                "iterations": 1
+              }
+            ]
+          },
+          "resetMana": {
+            "evals": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "stats",
+                    "baseMana",
+                    "value"
+                  ]
+                ],
+                "min": 5,
+                "operator": "AND",
+                "not": false,
+                "actionable": true
+              }
+            ],
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "stats",
+                    "baseMana",
+                    "max"
+                  ]
+                ],
+                "actionType": "set",
+                "value": 4,
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Special Rule§Insubstantial": {
+        "rules": {
+          "noHeavy": {
+            "failState": "pass",
+            "evaluate": "AND",
+            "actions": [
+              {
+                "paths": [
+                  [
+                    "{parent}",
+                    "disallowed",
+                    "items"
+                  ]
+                ],
+                "actionType": "add",
+                "value": "Armour§Heavy Armour",
+                "iterations": 1
+              }
+            ]
+          }
+        }
+      },
+      "Special Rule§Soul Link": {},
+      "Spell§Blink": {
+        "keywords": {
+          "Lore": [
+            "Plasm"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 7
+          }
+        }
+      },
+      "Spell§Blood Whip": {
+        "keywords": {
+          "Lore": [
+            "Blood"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 7
+          }
+        }
+      },
+      "Spell§Bone Armour": {
+        "keywords": {
+          "Lore": [
+            "Bone"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Bone Spear": {
+        "keywords": {
+          "Lore": [
+            "Bone"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Congealed Blast": {
+        "keywords": {
+          "Lore": [
+            "Blood"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 7
+          }
+        }
+      },
+      "Spell§Dominate": {
+        "keywords": {
+          "Lore": [
+            "Necromancy"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Flare": {
+        "keywords": {
+          "Lore": [
+            "Necromancy"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Invigorate": {
+        "keywords": {
+          "Lore": [
+            "Blood"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 5
+          }
+        }
+      },
+      "Spell§Phantasm": {
+        "keywords": {
+          "Lore": [
+            "Plasm"
+          ]
+        },
+        "assets": {
+          "traits": [
+            {
+              "item": "Miniature§Phantasm",
+              "stats": {
+                "Violence": {
+                  "value": 99
+                }
+              }
+            }
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 2
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Plasmic Emberburst": {
+        "keywords": {
+          "Lore": [
+            "Plasm"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Plasmic Shield": {
+        "keywords": {
+          "Lore": [
+            "Plasm"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 5
+          }
+        }
+      },
+      "Spell§Puppet": {
+        "keywords": {
+          "Lore": [
+            "Necromancy"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Spectral Pull": {
+        "keywords": {
+          "Lore": [
+            "Plasm"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "visibility": "normal",
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Summon": {
+        "keywords": {
+          "Lore": [
+            "Necromancy"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Teeth": {
+        "keywords": {
+          "Lore": [
+            "Bone"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Tide of Vermin": {
+        "keywords": {
+          "Lore": [
+            "Blood"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 6
+          }
+        }
+      },
+      "Spell§Tireless Command": {
+        "keywords": {
+          "Lore": [
+            "Bone"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 7
+          }
+        }
+      },
+      "Spell§Vigour": {
+        "keywords": {
+          "Lore": [
+            "Necromancy"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 7
+          }
+        }
+      },
+      "Spell§Wither": {
+        "keywords": {
+          "Lore": [
+            "Necromancy"
+          ]
+        },
+        "stats": {
+          "AP": {
+            "value": 1
+          },
+          "Channel": {
+            "value": 5
+          }
+        }
+      },
+      "Thrown Weapons§Throwing Axe/Mallet": {
+        "stats": {
+          "obols": {
+            "value": 5
+          },
+          "Attacks": {
+            "value": 1
+          },
+          "Damage": {
+            "value": "1/5"
+          },
+          "Range": {
+            "value": "1–4"
+          }
+        }
+      },
+      "Thrown Weapons§Wardart": {
+        "stats": {
+          "obols": {
+            "value": 5
+          },
+          "Attacks": {
+            "value": 1
+          },
+          "Damage": {
+            "value": "1/4"
+          },
+          "Range": {
+            "value": "1–6"
+          }
+        }
+      },
+      "Wretched Undead§Acolyte": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ]
+        }
+      },
+      "Wretched Undead§Balefire Body": {
+        "keywords": {
+          "Keywords": [
+            "Plasm"
+          ]
+        }
+      },
+      "Wretched Undead§Filthy/Shrouded": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ]
+        }
+      },
+      "Wretched Undead§Flicker Step": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone"
+          ]
+        }
+      },
+      "Wretched Undead§Fungal Bloom": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone"
+          ]
+        }
+      },
+      "Wretched Undead§Gnarled": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone"
+          ]
+        }
+      },
+      "Wretched Undead§Grafted/Many-limbed": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ]
+        }
+      },
+      "Wretched Undead§Purloiner": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone",
+            "Plasm"
+          ]
+        }
+      },
+      "Wretched Undead§Sluglike/Fleshy Amalgam": {
+        "keywords": {
+          "Keywords": [
+            "Blood",
+            "Bone"
+          ]
+        }
+      }
+    },
+    "gameModes": {},
+    "theme": {}
+  }
+}
