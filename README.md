@@ -1,3 +1,3 @@
 # Necropolis
 
-https://raw.githubusercontent.com/RosterizerTestData/Necropolis/main/Necropolis.manifest
+https://raw.githubusercontent.com/RosterizerTestData/Necropolis/main/Necropolis.rulebook

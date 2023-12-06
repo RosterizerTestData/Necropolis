@@ -5,9 +5,9 @@
   "genre": "fantasy",
   "publisher": "Peter Vigors",
   "url": "https://discord.gg/Eedt8xTb6w",
-  "notes": "This manifest is provided for the purposes of testing *Rosterizer* and is not intended for distribution.",
+  "notes": "This rulebook is provided for the purposes of testing *Rosterizer* and is not intended for distribution.",
   "wip": false,
-  "manifest": {
+  "rulebook": {
     "assetTaxonomy": {
       "Armour": {
         "aspects": {
