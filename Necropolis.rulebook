@@ -1,6 +1,6 @@
 {
   "name": "Necropolis",
-  "revision": "0.0.3",
+  "revision": "0.1.0",
   "game": "Necropolis",
   "genre": "fantasy",
   "publisher": "Peter Vigors",
@@ -2534,11 +2534,14 @@
           }
         }
       },
-      "Roster§Gathering": {
+      "Roster§Roster": {
         "allowed": {
           "classifications": [
             "Minion"
           ]
+        },
+        "aspects":{
+          "Label": "Gathering"
         },
         "rules": {
           "cairnBornTraits": {
