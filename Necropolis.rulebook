@@ -271,9 +271,7 @@
                   ]
                 ],
                 "value": [
-                  "{self}",
-                  "rules",
-                  "remainingMana",
+                  "{this}",
                   "evals",
                   "1",
                   "result",
@@ -305,9 +303,7 @@
                 "equation": {
                   "operator": "T-O",
                   "value": [
-                    "{self}",
-                    "rules",
-                    "remainingMana",
+                    "{this}",
                     "evals",
                     "0",
                     "result",
